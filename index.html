@@ -901,7 +901,8 @@ tick(); setInterval(tick, 1000);
 /* ===== RSVP & ucapan =====
    Tempel URL Web App Google Apps Script di UCAPAN_API supaya semua tamu melihat ucapan yang sama.
    Kalau dibiarkan kosong, ucapan hanya tersimpan di browser masing-masing tamu. */
-const UCAPAN_API = '';
+// Di pratinjau Claude / file lokal, Google diblokir: pakai mode simpan-di-browser.
+const UCAPAN_API = (location.hostname && !/claude|anthropic|localhost|127\.0\.0\.1/.test(location.hostname)) ? 'https://script.google.com/macros/s/AKfycbxkFMR-LZMSSidsb_9MDXOHu9WywQPT0LBf2uTUlp4BjBAAWuN2tf3GWPmZ8SWVxWRV/exec' : '';
 const KEY = 'nabila-iqbal-ucapan';
 let wishes = [], att = 'hadir', loading = !!UCAPAN_API, loadErr = false;
 if (!UCAPAN_API) { try { wishes = JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) {} }
