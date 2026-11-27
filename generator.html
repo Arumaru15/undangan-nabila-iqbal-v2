@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Link Tamu Undangan</title>
+<meta name="theme-color" content="#111917">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500;1,600&family=Great+Vibes&family=Jost:wght@400;500;600&display=swap">
+<style>
+/* VOICE: rapi dan tenang, alat kerja kecil yang ikut tema undangan.
+   IDEA: kartu undangan yang ditulis nama tamunya satu per satu.
+   PICTURE: daftar kartu tamu berisi caption + link dan tombol kirim, di samping form.
+   COLOUR and TYPE: hijau tua, emas, krem; Great Vibes judul, Cormorant label, Jost isi.
+   LAYOUT: satu kolom di HP; dua kolom di layar lebar (form kiri, hasil kanan). */
+:root{color-scheme:dark;--bg:#111917;--card:#1A2522;--line:rgba(217,188,126,.25);--ink:#DED8CB;--deep:#F2EADB;--gold:#C9A55A;--goldl:#E2C98F;--goldt:#D9BC7E;--muted:#9AA39E}
+*{box-sizing:border-box;min-width:0}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 'Jost',system-ui,sans-serif;overflow-x:clip}
+.wrap{max-width:1100px;margin:0 auto;padding:clamp(24px,5vw,48px) max(4vw,16px) 64px}
+header{text-align:center;margin-bottom:28px}
+header .k{font:italic 600 20px 'Cormorant Garamond',serif;color:var(--goldt)}
+header h1{margin:2px 0 6px;font:400 clamp(44px,8vw,64px)/1.1 'Great Vibes',cursive;color:var(--deep)}
+header p{margin:0 auto;max-width:560px;color:var(--muted);font-size:15px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:start}
+@media(min-width:900px){.grid{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}}
+.box{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px}
+.box h2{margin:0 0 14px;font:700 22px 'Cormorant Garamond',serif;color:var(--deep)}
+.f{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+label,.lb{font-size:14px;font-weight:600;color:var(--deep)}
+.hint{font-size:13px;color:var(--muted)}
+input,textarea{font:400 16px 'Jost',sans-serif;color:var(--deep);background:#131C1A;border:1px solid #3A4A45;border-radius:10px;padding:11px 13px;min-height:46px;width:100%}
+textarea{resize:vertical;line-height:1.5}
+#names{min-height:150px}
+#tpl{min-height:300px;font-size:15px}
+input:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:10px 18px;border-radius:999px;border:1px solid var(--gold);background:transparent;color:var(--goldl);font:600 14px 'Jost',sans-serif;cursor:pointer;text-decoration:none;white-space:nowrap;transition:background .2s,color .2s}
+.btn:hover{background:var(--gold);color:#141C1A}
+.btn.solid{background:var(--gold);color:#141C1A}.btn.solid:hover{background:var(--goldl)}
+.btn.ghost{border-color:#3A4A45;color:var(--muted)}.btn.ghost:hover{background:#22302C;color:var(--deep)}
+.btn.wa{border-color:#25D366;color:#7EE2A5}.btn.wa:hover{background:#25D366;color:#0E1A12}
+.btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tplhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
+.badge{font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;background:rgba(201,165,90,.15);color:var(--goldl)}
+.badge.edit{background:rgba(126,226,165,.15);color:#7EE2A5}
+.captext{white-space:pre-wrap;font-size:14px;line-height:1.6;color:var(--ink);background:#111917;border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow-wrap:anywhere}
+#tplView{max-height:340px;overflow-y:auto}
+.ph{display:inline-block;padding:0 7px;border-radius:6px;background:rgba(201,165,90,.18);color:var(--goldl);font-weight:600;font-size:13px}
+.tplbtns{margin-top:12px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.top h2{margin:0}
+.count{font-size:14px;color:var(--muted)}
+.list{display:flex;flex-direction:column;gap:14px}
+.guest{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:#151F1C}
+.guest .nm{font:700 20px 'Cormorant Garamond',serif;color:var(--deep);margin-bottom:8px}
+.guest .captext{max-height:220px;overflow-y:auto;margin-bottom:12px;font-size:13.5px}
+.guest .captext a{color:var(--goldt)}
+.guest .row{gap:6px}.guest .btn{min-height:40px;padding:8px 14px;font-size:13px}
+.empty{text-align:center;color:var(--muted);padding:34px 10px;border:1px dashed var(--line);border-radius:14px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,120px);opacity:0;visibility:hidden;transition:transform .3s,opacity .3s,visibility .3s;background:var(--goldl);color:#141C1A;font-weight:600;padding:10px 18px;border-radius:999px;z-index:9;box-shadow:0 10px 26px rgba(0,0,0,.4)}
+.toast.on{transform:translate(-50%,0);opacity:1;visibility:visible}
+.note{font-size:13px;color:var(--muted);margin-top:14px;text-align:center}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="k">Generator link tamu</div>
+    <h1>Nabila &amp; Iqbal</h1>
+    <p>Ketik nama tamu, satu nama per baris. Caption WhatsApp lengkap dengan link undangan untuk masing-masing tamu langsung jadi.</p>
+  </header>
+
+  <div class="grid">
+    <section class="box" aria-labelledby="hForm">
+      <h2 id="hForm">Data tamu</h2>
+      <div class="f">
+        <label for="names">Nama tamu</label>
+        <textarea id="names" placeholder="Arman&#10;Bapak Asep Karyana&#10;Ibu Siti &amp; Keluarga" spellcheck="false"></textarea>
+        <span class="hint">Satu baris = satu tamu.</span>
+      </div>
+
+      <div class="f" style="margin-bottom:0">
+        <div class="tplhead">
+          <span class="lb" id="lbTpl">Template caption WhatsApp</span>
+          <span class="badge" id="tplBadge">Tersimpan</span>
+        </div>
+        <div class="captext" id="tplView" aria-labelledby="lbTpl"></div>
+        <textarea id="tpl" aria-labelledby="lbTpl" hidden></textarea>
+        <span class="hint" id="tplHint" hidden>Tulis {nama} untuk nama tamu dan {link} untuk link undangan. Kalau {link} tidak ada, link otomatis ditaruh di akhir caption.</span>
+        <div class="row tplbtns">
+          <button class="btn" type="button" id="editTpl"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>Edit</button>
+          <button class="btn solid" type="button" id="saveTpl" hidden><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>Simpan</button>
+          <button class="btn ghost" type="button" id="cancelTpl" hidden>Batal</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="box" aria-labelledby="hList">
+      <div class="top">
+        <h2 id="hList">Siap dibagikan</h2>
+        <span class="count" id="count">0 tamu</span>
+      </div>
+      <div class="list" id="list" aria-live="polite"></div>
+      <p class="note">Nama dan template tersimpan di browser ini, jadi tetap ada kalau halaman dibuka lagi.</p>
+    </section>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+{
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const BASE = 'https://undangan-nabila-iqbal-v2.vercel.app/';
+const DEFAULT_TPL = `Assalamualaikum Warahmatullahi Wabarakatuh
+
+Kepada Yth.
+Bapak/Ibu/Saudara/i {nama}
+
+Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara pernikahan kami:
+
+Nabila & Iqbal
+Minggu, 13 Desember 2026
+
+Info lengkap acara:
+{link}
+
+Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.
+
+Wassalamualaikum Warahmatullahi Wabarakatuh`;
+const KEY = 'generator-link-nabila-iqbal';
+const store = (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } })();
+let tpl = store.tpl || DEFAULT_TPL;
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ names: $('#names').value, tpl })); } catch (e) {} };
+$('#names').value = store.names || '';
+
+const makeLink = name => BASE + '?to=' + encodeURIComponent(name).replace(/%20/g, '+');
+// Caption dan link selalu jadi satu: kalau template tidak memuat {link}, link ditaruh di akhir.
+const makeMsg = (name, link) => {
+  const t = tpl.includes('{link}') ? tpl : tpl.replace(/\s+$/, '') + '\n\n{link}';
+  return t.split('{nama}').join(name).split('{link}').join(link);
+};
+let guests = [];
+
+function showTemplate() {
+  $('#tplView').innerHTML = esc(tpl).replace(/\{nama\}/g, '<span class="ph">nama tamu</span>').replace(/\{link\}/g, '<span class="ph">link undangan</span>');
+}
+
+function render() {
+  guests = [...new Set($('#names').value.split('\n').map(s => s.replace(/\s+/g, ' ').trim()).filter(Boolean))]
+    .map(name => { const link = makeLink(name); return { name, link, msg: makeMsg(name, link) }; });
+  $('#count').textContent = guests.length + ' tamu';
+  $('#list').innerHTML = guests.length ? guests.map((g, i) => `
+    <article class="guest">
+      <div class="nm">${esc(g.name)}</div>
+      <div class="captext">${esc(g.msg).split(esc(g.link)).join(`<a href="${esc(g.link)}" target="_blank" rel="noopener">${esc(g.link)}</a>`)}</div>
+      <div class="row">
+        <a class="btn wa" data-act="wa" data-i="${i}" href="https://wa.me/?text=${encodeURIComponent(g.msg)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M21 3L10 14"/><path d="M21 3l-7 18-4-7-7-4z"/></svg>Salin &amp; kirim WhatsApp</a>
+        <button class="btn" type="button" data-act="copy" data-i="${i}"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h10"/></svg>Salin caption + link</button>
+        <a class="btn ghost" href="${esc(g.link)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg>Lihat undangan</a>
+      </div>
+    </article>`).join('') : '<div class="empty">Belum ada nama. Ketik nama tamu di kolom "Nama tamu".</div>';
+  save();
+}
+
+function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('on'), 1800); }
+async function copy(text, done) {
+  try { await navigator.clipboard.writeText(text); toast(done); return; } catch (e) {}
+  const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, text.length);
+  let ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+  ta.remove(); toast(ok ? done : 'Gagal menyalin, tekan lama teksnya untuk salin manual');
+}
+
+/* Template: tampil biasa, tombol Edit untuk mengubah, Simpan untuk menyimpan */
+const setEditing = on => {
+  $('#tplView').hidden = on; $('#tpl').hidden = !on; $('#tplHint').hidden = !on;
+  $('#editTpl').hidden = on; $('#saveTpl').hidden = !on; $('#cancelTpl').hidden = !on;
+  $('#tplBadge').textContent = on ? 'Sedang diedit' : 'Tersimpan';
+  $('#tplBadge').classList.toggle('edit', on);
+};
+$('#editTpl').addEventListener('click', () => { $('#tpl').value = tpl; setEditing(true); $('#tpl').focus(); });
+$('#saveTpl').addEventListener('click', () => {
+  const v = $('#tpl').value.trim();
+  if (!v) { toast('Template tidak boleh kosong'); return; }
+  tpl = v; setEditing(false); showTemplate(); render(); toast('Template disimpan');
+});
+$('#cancelTpl').addEventListener('click', () => setEditing(false));
+
+$('#list').addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const g = guests[+b.dataset.i];
+  if (b.dataset.act === 'wa') copy(g.msg, 'Caption + link disalin, membuka WhatsApp…');   // link tetap membuka WhatsApp
+  else copy(g.msg, 'Caption + link untuk ' + g.name + ' disalin');
+});
+// hanya 'input': render ulang saat blur (change) akan mengganti tombol tepat saat diketuk
+$('#names').addEventListener('input', render);
+showTemplate();
+render();
+}
+</script>
+</body>
+</html>
