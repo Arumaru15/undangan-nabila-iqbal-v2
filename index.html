@@ -752,10 +752,12 @@ $('#lbNext').addEventListener('click', () => show(cur + 1));
 lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
 lb.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); if (e.key === 'ArrowLeft') show(cur - 1); if (e.key === 'ArrowRight') show(cur + 1); });
 
-/* Nama tamu dari link: ...#to-Budi-Santoso */
+/* Nama tamu dari link: ...vercel.app/?to=Budi+Santoso (atau #to-Budi-Santoso) */
 try {
-  const h = decodeURIComponent(location.hash.slice(1));
-  if (/^to-/i.test(h)) { const n = h.slice(3).replace(/-/g, ' ').trim(); if (n) $('#guest').textContent = n; }
+  let n = new URLSearchParams(location.search).get('to') || '';
+  if (!n) { const h = decodeURIComponent(location.hash.slice(1)); if (/^to-/i.test(h)) n = h.slice(3).replace(/-/g, ' '); }
+  n = n.replace(/\s+/g, ' ').trim().slice(0, 60);
+  if (n) { $('#guest').textContent = n; const rn = $('#rName'); if (rn && !rn.value) rn.value = n; }
 } catch (e) {}
 
 /* ===== Musik latar: lagu.mp3 (Nothing's Gonna Change My Love for You) ===== */
